@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phone_store_application/detail_phone_screen.dart';
 import 'package:phone_store_application/phone.dart';
 
 class MainScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class MainScreen extends StatelessWidget {
         backgroundColor: Colors.blueGrey,
       ),
       body: LayoutBuilder(builder: (BuildContext context,BoxConstraints constraints){
-        if(constraints.maxWidth<=800){
+        if(constraints.maxWidth<=1200){
           return mobilePageMainScreeen();
         }else{
           return webPageMainScreen();
@@ -40,28 +41,44 @@ class webPageMainScreen extends StatelessWidget {
           phoneList.map((phone){
             return InkWell(
               onTap: (){
-
+                Navigator.push(context,MaterialPageRoute(builder: (context){
+                  return DetailScreen(phone:phone);
+                }));
               },
               child: Card(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Expanded(
-                      flex: 2,
                         child:Image.network(
                             phone.images.first,
+                          fit: BoxFit.fill,
                         )
                     ),
                     const SizedBox(height: 15),
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 3),
-                        child: Text(phone.name,style: const TextStyle(fontSize: 12.0),) ,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Text(phone.price,style: const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold),textAlign: TextAlign.left) ,
-                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 3),
+                          child: Text(phone.name,style: const TextStyle(fontSize: 15.0),) ,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Text(phone.price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),textAlign: TextAlign.left) ,
+                        ),
+                        Padding(padding: EdgeInsets.all(8),
+                            child: ElevatedButton(
+                              style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
+                              onPressed: (){
+                                Navigator.push(context,MaterialPageRoute(builder: (context){
+                                  return DetailScreen(phone:phone);
+                                }));
+                              },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
+
+                            )),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -83,7 +100,9 @@ class mobilePageMainScreeen extends StatelessWidget {
           final Phone phone=phoneList[index];
           return InkWell(
             onTap: (){
-
+              Navigator.push(context,MaterialPageRoute(builder: (context){
+                return DetailScreen(phone:phone);
+              }));
             },
             child: Card(
               child: Row(
@@ -94,8 +113,18 @@ class mobilePageMainScreeen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(padding: EdgeInsets.all(8),child: Text(phone.name,style: const TextStyle(fontSize: 12.0))),
-                          Padding(padding: EdgeInsets.all(8),child: Text(phone.price,style: const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold))),
+                          Padding(padding: EdgeInsets.all(8),child: Text(phone.name,style: const TextStyle(fontSize: 15.0))),
+                          Padding(padding: EdgeInsets.all(8),child: Text(phone.price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold))),
+                          Padding(padding: EdgeInsets.all(8),
+                              child: ElevatedButton(
+                                style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
+                                onPressed: (){
+                                Navigator.push(context,MaterialPageRoute(builder: (context){
+                                  return DetailScreen(phone:phone);
+                                }));
+                              },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
+
+                              )),
                         ],
                       )
                   ),

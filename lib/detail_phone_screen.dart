@@ -36,7 +36,7 @@ class _webPageDetailScreenState extends State<webPageDetailScreen> {
       appBar: AppBar(
         leading: IconButton(icon:Icon(Icons.arrow_back), onPressed: () { Navigator.pop(context); },),
       ),
-      body: Center(
+      body: SingleChildScrollView(child:Center(
         child:
         Container(
           margin:EdgeInsets.symmetric(horizontal: 64) ,
@@ -120,6 +120,7 @@ class _webPageDetailScreenState extends State<webPageDetailScreen> {
         )
 
       ),
+    )
     );
   }
 }

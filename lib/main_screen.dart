@@ -10,9 +10,40 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
-        leading: Icon(Icons.phone_android),
+        //leading: Icon(Icons.phone_android),
         backgroundColor: Colors.blueGrey,
       ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              ListTile(
+                title: Text("Home"),
+                leading: Icon(Icons.home),
+                onTap: (){
+                  
+                },
+              ),
+              ListTile(
+                title: Text("Login"),
+                leading: Icon(Icons.person),
+                onTap: (){
+                  Navigator.pushNamed(context,"/login");
+                },
+              ),
+              ListTile(
+                title: Text("Home"),
+                leading: Icon(Icons.home),
+                onTap: (){
+                  
+                },
+              ),
+
+            ],
+          ),
+          ),
+      ),
+
       body: LayoutBuilder(builder: (BuildContext context,BoxConstraints constraints){
         if(constraints.maxWidth<=1200){
           return mobilePageMainScreeen();

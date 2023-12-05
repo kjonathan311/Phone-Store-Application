@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phone_store_application/login_screen.dart';
 import 'package:phone_store_application/main_screen.dart';
 
 void main() {
@@ -17,7 +18,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      initialRoute:"/home",
+      routes:{
+        "/home": (context)=>const MainScreen(),
+        "/login":(context)=>const LoginScreen(),
+      }
+      
     );
   }
 

@@ -116,3 +116,15 @@ var phoneList=[
       ],
       rating: "5"),
 ];
+
+searchPhone(String phoneName){
+    List<Phone> searchedList = new List.empty();
+    if(phoneName != ''){
+        searchedList = phoneList.where((item) => item.name.toLowerCase().contains(phoneName.toLowerCase()))
+        .toList();
+    }
+    else{
+      searchedList = phoneList;
+    }
+    return searchedList;
+  }

@@ -30,27 +30,76 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: [
-          
+      appBar: AppBar(
+        title: const Text("Smartphone Store"),
+        //leading: Icon(Icons.phone_android),
+        backgroundColor: Colors.blueGrey,
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              ListTile(
+                title: Text("Home"),
+                leading: Icon(Icons.home),
+                onTap: (){
+                  Navigator.pushNamed(context,"/home");
+                },
+              ),
+              ListTile(
+                title: Text("Login"),
+                leading: Icon(Icons.person),
+                onTap: (){
+                  
+                },
+              ),
+              ListTile(
+                title: Text("Home"),
+                leading: Icon(Icons.home),
+                onTap: (){
+                  
+                },
+              ),
+
+            ],
+          ),
+          ),
+      ),
+        body: Padding(
+          padding: EdgeInsets.all(100),
+          child: Column(
+          children: [
+          Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+          SizedBox(height: 30,),
           Text("Email"),
           SizedBox(height: 5,),
           TextField(
             controller: _emailController,
           ),
-          SizedBox(height: 7,),
+          SizedBox(height: 20,),
           Text("Password"),
           SizedBox(height: 5,),
           TextField(
             controller: _passController,
             obscureText: true,
           ),
-          FloatingActionButton(
-            child: Text("Login"),
-            onPressed: (){
-            email = _emailController.text;
-            password=_passController.text;
-          })
+          SizedBox(height: 20,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FloatingActionButton(
+                
+                child: Text("Login"),
+                onPressed: (){
+                  setState(() {
+                      email = _emailController.text;
+                      password=_passController.text;
+                  });
+              }),
+            ],
+          ),
         ]),
+          ),
     );
   }
 }

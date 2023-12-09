@@ -50,14 +50,14 @@ class LoginScreenState extends State<LoginScreen> {
                 title: Text("Login"),
                 leading: Icon(Icons.person),
                 onTap: (){
-                  
+                  Navigator.pushNamed(context,"/login");
                 },
               ),
               ListTile(
                 title: Text("Home"),
-                leading: Icon(Icons.home),
+                leading: Icon(Icons.app_registration),
                 onTap: (){
-                  
+                  Navigator.pushNamed(context,"/register");
                 },
               ),
 

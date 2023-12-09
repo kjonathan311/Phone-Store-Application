@@ -21,7 +21,7 @@ class MainScreen extends StatelessWidget {
                 title: Text("Home"),
                 leading: Icon(Icons.home),
                 onTap: (){
-                  
+                  Navigator.pushNamed(context,"/home");
                 },
               ),
               ListTile(
@@ -32,10 +32,10 @@ class MainScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: Text("Home"),
-                leading: Icon(Icons.home),
+                title: Text("Register"),
+                leading: Icon(Icons.app_registration),
                 onTap: (){
-                  
+                  Navigator.pushNamed(context,"/register");
                 },
               ),
 

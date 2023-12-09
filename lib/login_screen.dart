@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phone_store_application/User.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,8 +28,24 @@ class LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  Future<void> _handleLogin() async {
+    email = _emailController.text;
+    password = _passController.text;
+
+    final user = await loginUser(email: email, password: password);
+
+    setState(() {
+      if (user != null) {
+        _showSnackBar(context, "Success Login");
+        Navigator.pushNamed(context, "/home");
+      } else {
+        _showSnackBar(context, "Error Login");
+      }
+    });
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
@@ -88,13 +105,9 @@ class LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FloatingActionButton(
-                
                 child: Text("Login"),
-                onPressed: (){
-                  setState(() {
-                      email = _emailController.text;
-                      password=_passController.text;
-                  });
+                onPressed: ()async{
+                    await _handleLogin();
               }),
             ],
           ),
@@ -102,4 +115,17 @@ class LoginScreenState extends State<LoginScreen> {
           ),
     );
   }
+}
+
+void _showSnackBar(BuildContext context,String text) {
+  final snackBar = SnackBar(
+    content: Text(text),
+    duration: Duration(seconds: 3),
+    action: SnackBarAction(
+      label: 'Close',
+      onPressed: () {
+      },
+    ),
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }

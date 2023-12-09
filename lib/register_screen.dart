@@ -1,5 +1,3 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_store_application/User.dart';
@@ -108,18 +106,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-  Future createUser({required String email,required String password})async{
-    final docUser=FirebaseFirestore.instance.collection('users').doc();
-
-    final user=User(
-        id:docUser.id,
-        email: email,
-        password: password
-    );
-    final json=user.toJson();
-
-    await docUser.set(json);
-  }
-  
 }
 

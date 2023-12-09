@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:phone_store_application/User.dart';
+import 'package:phone_store_application/FIrebaseAuthService.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,16 +33,13 @@ class LoginScreenState extends State<LoginScreen> {
     email = _emailController.text;
     password = _passController.text;
 
-    final user = await loginUser(email: email, password: password);
+    final FirebaseAuthService _auth = FirebaseAuthService();
 
-    setState(() {
+      User? user = await _auth.Login(email, password);
       if (user != null) {
-        _showSnackBar(context, "Success Login");
+        showToast(message: "User successfully login");
         Navigator.pushNamed(context, "/home");
-      } else {
-        _showSnackBar(context, "Error Login");
       }
-    });
   }
 
   @override
@@ -71,7 +69,7 @@ class LoginScreenState extends State<LoginScreen> {
                 },
               ),
               ListTile(
-                title: Text("Home"),
+                title: Text("Register"),
                 leading: Icon(Icons.app_registration),
                 onTap: (){
                   Navigator.pushNamed(context,"/register");
@@ -82,50 +80,41 @@ class LoginScreenState extends State<LoginScreen> {
           ),
           ),
       ),
-        body: Padding(
-          padding: EdgeInsets.all(100),
-          child: Column(
-          children: [
-          Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
-          SizedBox(height: 30,),
-          Text("Email"),
-          SizedBox(height: 5,),
-          TextField(
-            controller: _emailController,
-          ),
-          SizedBox(height: 20,),
-          Text("Password"),
-          SizedBox(height: 5,),
-          TextField(
-            controller: _passController,
-            obscureText: true,
-          ),
-          SizedBox(height: 20,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(100),
+            child: Column(
             children: [
-              FloatingActionButton(
-                child: Text("Login"),
-                onPressed: ()async{
-                    await _handleLogin();
-              }),
-            ],
-          ),
-        ]),
-          ),
+            Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+            SizedBox(height: 30,),
+            Text("Email"),
+            SizedBox(height: 5,),
+            TextField(
+              controller: _emailController,
+            ),
+            SizedBox(height: 20,),
+            Text("Password"),
+            SizedBox(height: 5,),
+            TextField(
+              controller: _passController,
+              obscureText: true,
+            ),
+            SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FloatingActionButton(
+                  child: Text("Login"),
+                  onPressed: ()async{
+                      await _handleLogin();
+                }),
+              ],
+            ),
+          ]),
+            ),
+        ),
     );
   }
 }
 
-void _showSnackBar(BuildContext context,String text) {
-  final snackBar = SnackBar(
-    content: Text(text),
-    duration: Duration(seconds: 3),
-    action: SnackBarAction(
-      label: 'Close',
-      onPressed: () {
-      },
-    ),
-  );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-}
+

@@ -5,22 +5,13 @@ import 'package:phone_store_application/login_screen.dart';
 import 'package:phone_store_application/main_screen.dart';
 import 'package:phone_store_application/register_screen.dart';
 
+import 'firebase_options.dart';
+
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  if(kIsWeb){
-    await Firebase.initializeApp(
-      options: FirebaseOptions(
-          apiKey: "AIzaSyDFB8Kyh32nEH-98SuUgWJl59mEuuMtw20",
-          authDomain: "phone-store-project.firebaseapp.com",
-          databaseURL: "https://phone-store-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "phone-store-project",
-          storageBucket: "phone-store-project.appspot.com",
-          messagingSenderId: "254618248942",
-          appId: "1:254618248942:web:1ae6cbe99b92d7632eb5ff",
-          measurementId: "G-HDGP8JJT1N"
-      )
-    );
-  }
+  await Firebase.initializeApp(
+         options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 

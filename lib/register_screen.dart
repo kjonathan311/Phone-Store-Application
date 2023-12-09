@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:phone_store_application/User.dart';
+import 'package:phone_store_application/FIrebaseAuthService.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -29,6 +30,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  Future<void> _handleRegister() async {
+    email = _emailController.text;
+    password = _passController.text;
+
+    final FirebaseAuthService _auth = FirebaseAuthService();
+
+    User? user = await _auth.Register(email, password);
+    if (user != null) {
+      showToast(message: "User successfully created");
+      Navigator.pushNamed(context, "/login");
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,41 +82,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(100),
-        child: Column(
-            children: [
-              Text("Register",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
-              SizedBox(height: 30,),
-              Text("Email"),
-              SizedBox(height: 5,),
-              TextField(
-                controller: _emailController,
-              ),
-              SizedBox(height: 20,),
-              Text("Password"),
-              SizedBox(height: 5,),
-              TextField(
-                controller: _passController,
-                obscureText: true,
-              ),
-              SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FloatingActionButton(
-                      child: Text("Register"),
-                      onPressed: (){
-                        setState(() {
-                          email = _emailController.text;
-                          password=_passController.text;
-                          createUser(email: email,password:password);
-                          Navigator.pushNamed(context,"/login");
-                        });
-                      }),
-                ],
-              ),
-            ]),
+      body:
+      SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(100),
+          child: Column(
+              children: [
+                Text("Register",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+                SizedBox(height: 30,),
+                Text("Email"),
+                SizedBox(height: 5,),
+                TextField(
+                  controller: _emailController,
+                ),
+                SizedBox(height: 20,),
+                Text("Password"),
+                SizedBox(height: 5,),
+                TextField(
+                  controller: _passController,
+                  obscureText: true,
+                ),
+                SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton(
+                        child: Text("Register"),
+                        onPressed: (){
+                          setState(() {
+                            email = _emailController.text;
+                            password=_passController.text;
+                            _handleRegister();
+                          });
+                        }),
+                  ],
+                ),
+              ]),
+        ),
       ),
     );
   }

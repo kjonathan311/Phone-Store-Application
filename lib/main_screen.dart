@@ -5,6 +5,8 @@ import 'package:phone_store_application/FIrebaseAuthService.dart';
 import 'package:phone_store_application/UserLogin.dart';
 import 'package:phone_store_application/detail_phone_screen.dart';
 import 'package:phone_store_application/phone.dart';
+import 'package:phone_store_application/provider/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -42,6 +44,13 @@ class MainScreen extends StatelessWidget {
                 leading: Icon(Icons.app_registration),
                 onTap: (){
                   Navigator.pushNamed(context,"/register");
+                },
+              ),
+              ListTile(
+                title: Text("Cart"),
+                leading: Icon(Icons.add_shopping_cart_rounded),
+                onTap: (){
+                  Navigator.pushNamed(context,"/cart");
                 },
               ),
 
@@ -144,16 +153,33 @@ class _webPageMainScreenState extends State<webPageMainScreen> {
                                           padding: EdgeInsets.symmetric(vertical: 10),
                                           child: Text(phone.price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),textAlign: TextAlign.left) ,
                                         ),
-                                        Padding(padding: EdgeInsets.all(8),
-                                            child: ElevatedButton(
-                                              style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
-                                              onPressed: (){
-                                                Navigator.push(context,MaterialPageRoute(builder: (context){
-                                                  return DetailScreen(phone:phone);
-                                                }));
-                                              },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
-
-                                            )),
+                                        Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              ElevatedButton(
+                                                style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
+                                                onPressed: (){
+                                                  Navigator.push(context,MaterialPageRoute(builder: (context){
+                                                    return DetailScreen(phone:phone);
+                                                  }));
+                                                },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
+                                              ),
+                                              Consumer<CartProvider>(
+                                                builder: (context, CartProvider dataCart, widget) => ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(primary: Colors.cyan),
+                                                  onPressed: ()async{
+                                                    setState(() {
+                                                      dataCart.addCart(phone);
+                                                    });
+                                                  }, 
+                                                  child:Icon(Icons.add_shopping_cart_rounded, color: Colors.black,)
+                                                )
+                                              )
+                                            ],
+                                          ),
+                                        )
                                       ],
                                     )
                                   ],
@@ -236,16 +262,58 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
                                 children: [
                                   Padding(padding: EdgeInsets.all(8),child: Text(phone.name,style: const TextStyle(fontSize: 15.0))),
                                   Padding(padding: EdgeInsets.all(8),child: Text(phone.price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold))),
-                                  Padding(padding: EdgeInsets.all(8),
-                                      child: ElevatedButton(
-                                        style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
-                                        onPressed: (){
-                                        Navigator.push(context,MaterialPageRoute(builder: (context){
-                                          return DetailScreen(phone:phone);
-                                        }));
-                                      },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
+                                  Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ElevatedButton(
+                                          style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
+                                          onPressed: (){
+                                            Navigator.push(context,MaterialPageRoute(builder: (context){
+                                              return DetailScreen(phone:phone);
+                                            }));
+                                          },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
+                                        ),
+                                        // ElevatedButton(
+                                        //   style: ElevatedButton.styleFrom(primary: Colors.blue),
+                                        //   onPressed: (){
+                                        //     Navigator.push(context,MaterialPageRoute(builder: (context){
+                                        //       // return DetailScreen(phone:phone);
+                                        //       return Consumer<CartProvider>(
+                                        //         builder:(context, CartProvider dataCart, widget) {
+                                        //           setState(() {
+                                        //             dataCart.addCart(phone);
+                                        //           });
+                                        //         },
+                                        //       );
+                                        //     }));
+                                        //   },child:Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
+                                        // ),
+                                        Consumer<CartProvider>(
+                                          builder: (context, CartProvider dataCart, widget) => ElevatedButton(
+                                            style: ElevatedButton.styleFrom(primary: Colors.cyan),
+                                            onPressed: ()async{
+                                              setState(() {
+                                                dataCart.addCart(phone);
+                                              });
+                                            }, 
+                                            child:Icon(Icons.add_shopping_cart_rounded, color: Colors.black,)
+                                          )
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                  // Padding(padding: EdgeInsets.all(8),
+                                  //     child: ElevatedButton(
+                                  //       style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
+                                  //       onPressed: (){
+                                  //       Navigator.push(context,MaterialPageRoute(builder: (context){
+                                  //         return DetailScreen(phone:phone);
+                                  //       }));
+                                  //     },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
 
-                                      )),
+                                  //     )),
                                 ],
                               )
                           ),
@@ -260,3 +328,112 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
     );
   }
 }
+
+
+// class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
+//   String query = '';
+//   List<Phone> listPhone = phoneList;
+
+//   @override
+//   void initState() {
+//     listPhone = phoneList;
+//     super.initState();
+//   }
+
+//   void onQueryChanged(String newQuery) {
+//     setState(() {
+//       query = newQuery;
+//       listPhone = searchPhone(query);
+//     });
+    
+//   }
+  
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: <Widget>[
+//          SizedBox(height: 10,),
+//          Expanded(
+//               flex: 1,
+//               child: Padding(
+//                 padding: EdgeInsets.symmetric(horizontal: 25),
+//                 child: TextField(
+//                   onSubmitted: onQueryChanged,
+//                   decoration: InputDecoration(
+//                     hintText: 'Search Other Phone',
+//                     border: OutlineInputBorder(),
+//                     prefixIcon: Icon(Icons.search)),
+//                   ),
+//               ),
+//             ),
+//             Expanded(
+//               flex: 9,
+//               child: Padding(
+//                 padding: EdgeInsets.all(25.0),
+//                 child: ListView.builder(itemBuilder: (context,index){
+//                   final Phone phone=listPhone[index];
+//                   return InkWell(
+//                     onTap: (){
+//                       Navigator.push(context,MaterialPageRoute(builder: (context){
+//                         return DetailScreen(phone:phone);
+//                       }));
+//                     },
+//                     child: Card(
+//                       child: Row(
+//                         mainAxisSize: MainAxisSize.min,
+//                         children: [
+//                           Expanded(child: Image.network(phone.images.first)),
+//                           Expanded(
+//                               child: Column(
+//                                 crossAxisAlignment: CrossAxisAlignment.start,
+//                                 children: [
+//                                   Padding(padding: EdgeInsets.all(8),child: Text(phone.name,style: const TextStyle(fontSize: 15.0))),
+//                                   Padding(padding: EdgeInsets.all(8),child: Text(phone.price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold))),
+//                                   Padding(
+//                                     padding: EdgeInsets.all(8),
+//                                     child: Row(
+//                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                                       children: [
+//                                         ElevatedButton(
+//                                           style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
+//                                           onPressed: (){
+//                                             Navigator.push(context,MaterialPageRoute(builder: (context){
+//                                               return DetailScreen(phone:phone);
+//                                             }));
+//                                           },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
+//                                         ),
+//                                         ElevatedButton(
+//                                           style: ElevatedButton.styleFrom(primary: Colors.blue),
+//                                           onPressed: (){
+//                                             Navigator.push(context,MaterialPageRoute(builder: (context){
+//                                               return DetailScreen(phone:phone);
+//                                             }));
+//                                           },child:Icon(Icons.add_shopping_cart_rounded, color: Colors.black,),
+//                                         ),
+//                                       ],
+//                                     ),
+//                                   )
+//                                   // Padding(padding: EdgeInsets.all(8),
+//                                   //     child: ElevatedButton(
+//                                   //       style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
+//                                   //       onPressed: (){
+//                                   //       Navigator.push(context,MaterialPageRoute(builder: (context){
+//                                   //         return DetailScreen(phone:phone);
+//                                   //       }));
+//                                   //     },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
+
+//                                   //     )),
+//                                 ],
+//                               )
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   );
+//                 },itemCount: listPhone.length,),
+//             )
+//             ),
+//       ],
+//     );
+//   }
+// }

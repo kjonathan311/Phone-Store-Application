@@ -77,6 +77,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Navigator.pushNamed(context,"/register");
                 },
               ),
+              ListTile(
+                title: Text("Cart"),
+                leading: Icon(Icons.add_shopping_cart_rounded),
+                onTap: (){
+                  Navigator.pushNamed(context,"/cart");
+                },
+              ),
 
             ],
           ),

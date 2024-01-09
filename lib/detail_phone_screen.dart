@@ -34,7 +34,37 @@ class _webPageDetailScreenState extends State<webPageDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon:Icon(Icons.arrow_back), onPressed: () { Navigator.pop(context); },),
+        //leading: IconButton(icon:Icon(Icons.arrow_back), onPressed: () { Navigator.pop(context); },),
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              ListTile(
+                title: Text("Home"),
+                leading: Icon(Icons.home),
+                onTap: (){
+                  Navigator.pushNamed(context,"/home");
+                },
+              ),
+              ListTile(
+                title: Text("Login"),
+                leading: Icon(Icons.person),
+                onTap: (){
+                  Navigator.pushNamed(context,"/login");
+                },
+              ),
+              ListTile(
+                title: Text("Register"),
+                leading: Icon(Icons.app_registration),
+                onTap: (){
+                  Navigator.pushNamed(context,"/register");
+                },
+              ),
+
+            ],
+          ),
+          ),
       ),
       body: SingleChildScrollView(child:Center(
         child:
@@ -142,7 +172,37 @@ class _mobilePageDetailScreenState extends State<mobilePageDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon:Icon(Icons.arrow_back), onPressed: () { Navigator.pop(context); },),
+        //leading: IconButton(icon:Icon(Icons.arrow_back), onPressed: () { Navigator.pop(context); },),
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              ListTile(
+                title: Text("Home"),
+                leading: Icon(Icons.home),
+                onTap: (){
+                  Navigator.pushNamed(context,"/home");
+                },
+              ),
+              ListTile(
+                title: Text("Login"),
+                leading: Icon(Icons.person),
+                onTap: (){
+                  Navigator.pushNamed(context,"/login");
+                },
+              ),
+              ListTile(
+                title: Text("Register"),
+                leading: Icon(Icons.app_registration),
+                onTap: (){
+                  Navigator.pushNamed(context,"/register");
+                },
+              ),
+
+            ],
+          ),
+          ),
       ),
       body:SingleChildScrollView(child:
       Center(

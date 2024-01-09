@@ -35,7 +35,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     final FirebaseAuthService _auth = FirebaseAuthService();
 
-      User? user = await _auth.Login(email, password);
+      User? user = await _auth.Login(email,password);
       if (user != null) {
         showToast(message: "User successfully login");
         Navigator.pushNamed(context, "/home");
@@ -85,7 +85,7 @@ class LoginScreenState extends State<LoginScreen> {
             padding: EdgeInsets.all(100),
             child: Column(
             children: [
-            Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+            Text("Sign In",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
             SizedBox(height: 30,),
             Text("Email"),
             SizedBox(height: 5,),
@@ -110,6 +110,13 @@ class LoginScreenState extends State<LoginScreen> {
                 }),
               ],
             ),
+            Row(
+              children: [
+                FloatingActionButton(onPressed: (){
+                  
+                })
+              ],
+            )
           ]),
             ),
         ),

@@ -33,6 +33,7 @@ class CartProvider extends ChangeNotifier {
   void removeQty(int index){
     if (_qty[index]-1 == 0){
       _qty.removeAt(index);
+      _allcart.removeAt(index);
     }
     else{
       _qty[index] = _qty[index]-1;

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_store_application/detail_phone_screen.dart';
 import 'package:phone_store_application/phone.dart';
@@ -9,6 +10,12 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final allCart = Provider.of<CartProvider>(context, listen: false);
+    String userNow = "";
+    User? statusUser = FirebaseAuth.instance.currentUser;
+    if(statusUser!=null){
+      userNow = statusUser.email.toString();
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
@@ -44,7 +51,15 @@ class MainScreen extends StatelessWidget {
                 title: Text("Cart"),
                 leading: Icon(Icons.add_shopping_cart_rounded),
                 onTap: (){
-                  Navigator.pushNamed(context,"/cart");
+                  if (allCart.isInitialdata == false && userNow!=""){
+                    allCart.initialData(userNow).then((value){
+                      Navigator.pushNamed(context,"/cart");
+                    });
+                  }
+                  else{
+                    Navigator.pushNamed(context,"/cart");
+                  }
+                  print(userNow);
                 },
               ),
 
@@ -94,6 +109,11 @@ class _webPageMainScreenState extends State<webPageMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String userNow = "";
+    User? statusUser = FirebaseAuth.instance.currentUser;
+    if(statusUser!=null){
+      userNow = statusUser.email.toString();
+    }
     return Column(
           children: <Widget>[
             SizedBox(height: 10,),
@@ -165,7 +185,7 @@ class _webPageMainScreenState extends State<webPageMainScreen> {
                                                   style: ElevatedButton.styleFrom(primary: Colors.cyan),
                                                   onPressed: ()async{
                                                     setState(() {
-                                                      dataCart.addCart(phone);
+                                                      dataCart.addCart(phone, userNow, context);
                                                     });
                                                   }, 
                                                   child:Icon(Icons.add_shopping_cart_rounded, color: Colors.black,)
@@ -217,6 +237,11 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
   
   @override
   Widget build(BuildContext context) {
+    String userNow = "";
+    User? statusUser = FirebaseAuth.instance.currentUser;
+    if(statusUser!=null){
+      userNow = statusUser.email.toString();
+    }
     return Column(
       children: <Widget>[
          SizedBox(height: 10,),
@@ -288,9 +313,7 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
                                           builder: (context, CartProvider dataCart, widget) => ElevatedButton(
                                             style: ElevatedButton.styleFrom(primary: Colors.cyan),
                                             onPressed: ()async{
-                                              setState(() {
-                                                dataCart.addCart(phone);
-                                              });
+                                               dataCart.addCart(phone, userNow, context);
                                             }, 
                                             child:Icon(Icons.add_shopping_cart_rounded, color: Colors.black,)
                                           )

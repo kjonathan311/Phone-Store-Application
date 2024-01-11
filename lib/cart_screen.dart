@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_store_application/detail_phone_screen.dart';
 import 'package:phone_store_application/phone.dart';
@@ -9,6 +10,23 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // debugPrint(statusUser);
+    // final _auth = FirebaseAuth.instance;
+    // String userEmail;
+    // void getCurrentUserEmail() async {
+    // final user =
+    //   await _auth.currentUser().then((value) => userEmail = value.email);
+    // }
+    // final _auth = FirebaseAuth.instance;
+    // dynamic user;
+    // String userEmail;
+    // String userPhoneNumber;
+
+    // void getCurrentUserInfo() async {
+    //   user = await _auth.currentUser();
+    //   userEmail = user.email;
+    //   userPhoneNumber = user.phoneNumber;
+    // }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
@@ -129,8 +147,8 @@ class _webPageMainScreenState extends State<webPageMainScreen> {
                             value: cartCheck[index],
                             activeColor: Colors.orangeAccent,
                             onChanged: (newBool){
-                              setState((){
-                                  dataCart.checkAction(index);
+                              setState(() {
+                                dataCart.checkAction(index);
                               });
                             },
                           )
@@ -161,7 +179,7 @@ class _webPageMainScreenState extends State<webPageMainScreen> {
                                     heroTag: null,
                                     onPressed: ()async{
                                       setState(() {
-                                        dataCart.removeQty(index);
+                                        dataCart.removeQty(index, context);
                                       });
                                     },
                                     backgroundColor: Colors.blue,
@@ -275,327 +293,158 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
     final cartCheck = Provider.of<CartProvider>(context, listen:false).isCheck;
     final checkCount = Provider.of<CartProvider>(context, listen:false).countCheck;
     final totalHarga = Provider.of<CartProvider>(context, listen:false).totalHarga;
-    return Column(
-      children: <Widget>[
-        SizedBox(height: 10,),
-        Expanded(
-          flex: 9,
-          child: Padding(
-            padding: EdgeInsets.all(25.0),
-            child: ListView.builder(itemBuilder: (context,index){
-              // final Phone phone=listPhone[index];
-              return InkWell(
-                onTap: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context){
-                    return DetailScreen(phone:cartData[index]);
-                  }));
-                },
-                child: Card(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children :[
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                        child: 
-                        Consumer<CartProvider>(
-                          builder: (context, CartProvider dataCart, widget) => Checkbox(
-                            value: cartCheck[index],
-                            activeColor: Colors.orangeAccent,
-                            onChanged: (newBool){
-                              setState((){
+    if(cartData.length == 0){
+      return Align(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+          Icon(Icons.shopping_cart, size: 60,),
+          Text("Tidak ada Barang", style: TextStyle(fontSize: 30.0,fontWeight: FontWeight.bold))
+        ]),
+      );
+    }   
+    else{
+      return Column(
+        children: <Widget>[
+          SizedBox(height: 10,),
+          Expanded(
+            flex: 9,
+            child: Padding(
+              padding: EdgeInsets.all(25.0),
+              child: ListView.builder(itemBuilder: (context,index){
+                // final Phone phone=listPhone[index];
+                return InkWell(
+                  onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context){
+                      return DetailScreen(phone:cartData[index]);
+                    }));
+                  },
+                  child: Card(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children :[
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                          child: 
+                          Consumer<CartProvider>(
+                            builder: (context, CartProvider dataCart, widget) => Checkbox(
+                              value: cartCheck[index],
+                              activeColor: Colors.orangeAccent,
+                              onChanged: (newBool) async{
+                                setState(() {
                                   dataCart.checkAction(index);
-                              });
-                            },
+                                });
+                              },
+                            )
                           )
-                        )
-                        
-                      ),
-                      Padding(padding: EdgeInsets.fromLTRB(0, 0, 5, 0), child: Image.network(cartData[index].images.first, fit: BoxFit.contain, width: 130, height: 130,)),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0), child: Text(cartData[index].name,style: const TextStyle(fontSize: 15.0))),
-                            Padding(padding: EdgeInsets.fromLTRB(0, 19, 0, 0), child: Text(cartData[index].price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold))),
-                          ]
-                        )
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: FittedBox(
-                                child : Consumer<CartProvider>(
-                                  builder: (context, CartProvider dataCart, widget) => FloatingActionButton(
-                                    heroTag: null,
-                                    onPressed: ()async{
-                                      setState(() {
-                                        dataCart.removeQty(index);
-                                      });
-                                    },
-                                    backgroundColor: Colors.blue,
-                                    child: Icon(Icons.remove),
+                          
+                        ),
+                        Padding(padding: EdgeInsets.fromLTRB(0, 0, 5, 0), child: Image.network(cartData[index].images.first, fit: BoxFit.contain, width: 130, height: 130,)),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0), child: Text(cartData[index].name,style: const TextStyle(fontSize: 15.0))),
+                              Padding(padding: EdgeInsets.fromLTRB(0, 19, 0, 0), child: Text(cartData[index].price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold))),
+                            ]
+                          )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: FittedBox(
+                                  child : Consumer<CartProvider>(
+                                    builder: (context, CartProvider dataCart, widget) => FloatingActionButton(
+                                      heroTag: null,
+                                      onPressed: ()async{
+                                        setState(() {
+                                          dataCart.removeQty(index, context);
+                                        });
+                                      },
+                                      backgroundColor: Colors.blue,
+                                      child: Icon(Icons.remove),
+                                    )
                                   )
-                                )
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 30.0,
-                              child: Text(cartQty[index].toString(),textAlign: TextAlign.center,),  
-                            ),
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: FittedBox(
-                                child: Consumer<CartProvider>(
-                                  builder: (context, CartProvider dataCart, widget) => FloatingActionButton(
-                                    heroTag: null,
-                                    onPressed: ()async{
-                                      setState(() {
-                                        dataCart.addQty(index);
-                                      });
-                                    },
-                                    backgroundColor: Colors.blue,
-                                    child: Icon(Icons.add),
+                              SizedBox(
+                                width: 30.0,
+                                child: Text(cartQty[index].toString(),textAlign: TextAlign.center,),  
+                              ),
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: FittedBox(
+                                  child: Consumer<CartProvider>(
+                                    builder: (context, CartProvider dataCart, widget) => FloatingActionButton(
+                                      heroTag: null,
+                                      onPressed: ()async{
+                                        setState(() {
+                                          dataCart.addQty(index);
+                                        });
+                                      },
+                                      backgroundColor: Colors.blue,
+                                      child: Icon(Icons.add),
+                                    )
                                   )
-                                )
+                                ),
                               ),
-                            ),
-                          ],
-                        ), 
-                      )
-                    ],
+                            ],
+                          ), 
+                        )
+                      ],
+                    ),
                   ),
+                );
+              },itemCount: cartData.length,),
+            )
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child : Container(
+              color: Colors.red,
+              child: 
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Text("Total Produk : $checkCount",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Padding(padding: EdgeInsets.only(right: 5),child : Text("$totalHarga", style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold))),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(primary: Colors.blue),
+                          onPressed: (){
+                            // Navigator.push(context,MaterialPageRoute(builder: (context){
+                            //   return DetailScreen(phone:phone);
+                            // }));
+                          },child:Text("Checkout", style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
+                        )
+                      ],
+                    )
+                  ],
                 ),
-              );
-            },itemCount: cartData.length,),
-          )
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child : Container(
-            color: Colors.red,
-            child: 
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Text("Total Produk : $checkCount",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Padding(padding: EdgeInsets.only(right: 5),child : Text("$totalHarga", style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold))),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.blue),
-                        onPressed: (){
-                          // Navigator.push(context,MaterialPageRoute(builder: (context){
-                          //   return DetailScreen(phone:phone);
-                          // }));
-                        },child:Text("Checkout", style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
-                      )
-                    ],
-                  )
-                ],
-              ),
+              )
             )
           )
-        )
-      ],
-    );
+        ],
+      );
+    }
   }
 }
 
 
-// class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
-//   String query = '';
-//   List<Phone> listPhone = phoneList;
-
-//   @override
-//   void initState() {
-//     listPhone = phoneList;
-//     super.initState();
-//   }
-
-//   void onQueryChanged(String newQuery) {
-//     setState(() {
-//       query = newQuery;
-//       listPhone = searchPhone(query);
-//     });
-    
-//   }
-
-//   int _counter = 0;
-//   bool _isChecked = false;
-
-//   void _incrementCounter() {
-//     setState(() {
-//       _counter++;
-//     });
-//   }
-
-//   void _decrementCounter() {
-//     setState(() {
-//       if (_counter>0) {
-//         _counter--;
-//       }
-//     });
-//   }
-  
-//   @override
-//   Widget build(BuildContext context) {
-//     // final myCart = Provider.of<CartProvider>(context).allcart;
-//     return Column(
-//       children: <Widget>[
-//         SizedBox(height: 10,),
-//         Expanded(
-//           flex: 9,
-//           child: Padding(
-//             padding: EdgeInsets.all(25.0),
-//             child: ListView.builder(itemBuilder: (context,index){
-//               final Phone phone=listPhone[index];
-//               return InkWell(
-//                 onTap: (){
-//                   Navigator.push(context,MaterialPageRoute(builder: (context){
-//                     return DetailScreen(phone:phone);
-//                   }));
-//                 },
-//                 child: Card(
-//                   child: Row(
-//                     mainAxisSize: MainAxisSize.max,
-//                     mainAxisAlignment: MainAxisAlignment.start,
-//                     // children: [
-//                     //   Checkbox(value: true,onChanged: (value) => false,),
-//                     //   Expanded(child: Image.network(phone.images.first, fit: BoxFit.contain, width: 180, height: 180,)),
-//                     //   Expanded(
-//                     //     child: Row(
-//                     //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     //       crossAxisAlignment: CrossAxisAlignment.center,
-//                     //       children: <Widget>[
-//                     //         // Padding(padding: EdgeInsets.all(8),child: Text(phone.name,style: const TextStyle(fontSize: 15.0))),
-//                     //         // Padding(padding: EdgeInsets.all(8),child: Text(phone.price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold))),
-//                     //         // Padding(padding: EdgeInsets.all(8),
-//                     //         //     child: ElevatedButton(
-//                     //         //       style: phone.condition=='Baru'? ElevatedButton.styleFrom(primary: Colors.blueGrey):ElevatedButton.styleFrom(primary: Colors.orange),
-//                     //         //       onPressed: (){
-//                     //         //       Navigator.push(context,MaterialPageRoute(builder: (context){
-//                     //         //         return DetailScreen(phone:phone);
-//                     //         //       }));
-//                     //         //     },child:Text(phone.condition, style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
-
-//                     //         //     )
-//                     //         // ),
-//                     //         Expanded(child: Text(phone.name)),
-//                     //         Expanded(child: Text(phone.price))
-//                     //       ],
-//                     //     )
-//                     //   ),
-//                     // ],
-//                     children :[
-//                       Padding(
-//                         padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-//                         child: Checkbox(
-//                           value: _isChecked,
-//                           activeColor: Colors.orangeAccent,
-//                           onChanged: (newBool){
-//                             setState(() => _isChecked = newBool!);
-//                           },
-//                         )
-//                       ),
-//                       Padding(padding: EdgeInsets.fromLTRB(0, 0, 5, 0), child: Image.network(phone.images.first, fit: BoxFit.contain, width: 130, height: 130,)),
-//                       Expanded(
-//                         child: Column(
-//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: <Widget>[
-//                             Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0), child: Text(phone.name,style: const TextStyle(fontSize: 15.0))),
-//                             Padding(padding: EdgeInsets.fromLTRB(0, 19, 0, 0), child: Text(phone.price,style: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold))),
-//                           ]
-//                         )
-//                       ),
-//                       Padding(
-//                         padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             SizedBox(
-//                               width: 30,
-//                               height: 30,
-//                               child: FittedBox(
-//                                 child: FloatingActionButton(
-//                                   onPressed: _decrementCounter,
-//                                   backgroundColor: Colors.blue,
-//                                   child: Icon(Icons.remove),
-//                                 ),
-//                               ),
-//                             ),
-//                             SizedBox(
-//                               width: 30.0,
-//                               child: Text("$_counter",textAlign: TextAlign.center,),  
-//                             ),
-//                             SizedBox(
-//                               width: 30,
-//                               height: 30,
-//                               child: FittedBox(
-//                                 child: FloatingActionButton(
-//                                   onPressed: _incrementCounter,
-//                                   backgroundColor: Colors.blue,
-//                                   child: Icon(Icons.add),
-//                                 ),
-//                               ),
-//                             ),
-//                           ],
-//                         ), 
-//                       )
-//                     ],
-//                   ),
-//                 ),
-//               );
-//             },itemCount: listPhone.length,),
-//           )
-//         ),
-//         Padding(
-//           padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
-//           child : Container(
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: [
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   children: [
-//                     Text("Total Produk : $_counter",style: TextStyle(fontWeight: FontWeight.bold),),
-//                     Text("$_counter")
-//                   ],
-//                 ),
-//                 Row(
-//                   children: [
-//                     ElevatedButton(
-//                       style: ElevatedButton.styleFrom(primary: Colors.blue),
-//                       onPressed: (){
-//                         // Navigator.push(context,MaterialPageRoute(builder: (context){
-//                         //   return DetailScreen(phone:phone);
-//                         // }));
-//                       },child:Text("Checkout", style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
-//                     )
-//                   ],
-//                 )
-//               ],
-//             )
-//           )
-//         )
-//       ],
-//     );
-//   }
-// }

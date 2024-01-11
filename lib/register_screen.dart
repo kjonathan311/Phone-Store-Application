@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_store_application/FIrebaseAuthService.dart';
+import 'package:phone_store_application/provider/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -46,6 +48,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final allCart = Provider.of<CartProvider>(context, listen: false);
+    String userNow = "";
+    User? statusUser = FirebaseAuth.instance.currentUser;
+    if(statusUser!=null){
+      userNow = statusUser.email.toString();
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
@@ -81,7 +89,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 title: Text("Cart"),
                 leading: Icon(Icons.add_shopping_cart_rounded),
                 onTap: (){
-                  Navigator.pushNamed(context,"/cart");
+                  if (allCart.isInitialdata == false && userNow!=""){
+                    allCart.initialData(userNow).then((value){
+                      Navigator.pushNamed(context,"/cart");
+                    });
+                  }
+                  else{
+                    Navigator.pushNamed(context,"/cart");
+                  }
                 },
               ),
 

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_store_application/FIrebaseAuthService.dart';
+import 'package:phone_store_application/provider/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,18 +34,27 @@ class LoginScreenState extends State<LoginScreen> {
   Future<void> _handleLogin() async {
     email = _emailController.text;
     password = _passController.text;
+    final allCart = Provider.of<CartProvider>(context, listen: false);
 
     final FirebaseAuthService _auth = FirebaseAuthService();
 
       User? user = await _auth.Login(email, password);
       if (user != null) {
         showToast(message: "User successfully login");
-        Navigator.pushNamed(context, "/home");
+        allCart.initialData(email).then((value){
+          Navigator.pushNamed(context, "/home");
+        });
       }
   }
 
   @override
   Widget build(BuildContext context){
+    final allCart = Provider.of<CartProvider>(context, listen: false);
+    String userNow = "";
+    User? statusUser = FirebaseAuth.instance.currentUser;
+    if(statusUser!=null){
+      userNow = statusUser.email.toString();
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
@@ -79,7 +90,14 @@ class LoginScreenState extends State<LoginScreen> {
                 title: Text("Cart"),
                 leading: Icon(Icons.add_shopping_cart_rounded),
                 onTap: (){
-                  Navigator.pushNamed(context,"/cart");
+                  if (allCart.isInitialdata == false && userNow!=""){
+                    allCart.initialData(userNow).then((value){
+                      Navigator.pushNamed(context,"/cart");
+                    });
+                  }
+                  else{
+                    Navigator.pushNamed(context,"/cart");
+                  }
                 },
               ),
 

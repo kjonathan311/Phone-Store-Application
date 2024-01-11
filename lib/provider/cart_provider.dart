@@ -190,6 +190,12 @@ class CartProvider extends ChangeNotifier {
           _allcart.add(phoneList.singleWhere((item) => item.name == value["phone_name"]));
           _qty.add(value["qty"]);
           _isCheck.add(value["check"]);
+          if (value["check"]==true){
+            String harga = _allcart[_allcart.length-1].price.replaceAll(new RegExp(r'[^\w\s]+'),''); // di sini untuk menghilangkan semua titik dari string harga
+            String harga2 = harga.substring(3,harga.length);
+            int valHarga = int.parse(harga2);
+            _totalHarga += valHarga*_qty[_qty.length-1];
+          }
         }
       });
       _isInitialdata = true;

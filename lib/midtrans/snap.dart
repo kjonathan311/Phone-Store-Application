@@ -5,14 +5,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' show Platform;
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:phone_store_application/midtrans/config.dart';
-import 'package:webview_dart/webview_dart.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SnapScreen extends StatefulWidget {
   final String? transactionToken;
-
-  SnapScreen({
-    this.transactionToken,
+  final int? totalHarga;
+  SnapScreen({ 
+    this.transactionToken, this.totalHarga
   });
 
   @override

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:phone_store_application/FIrebaseAuthService.dart';
 import 'package:phone_store_application/detail_phone_screen.dart';
 import 'package:phone_store_application/phone.dart';
 import 'package:phone_store_application/provider/cart_provider.dart';
@@ -13,9 +14,81 @@ class MainScreen extends StatelessWidget {
     final allCart = Provider.of<CartProvider>(context, listen: false);
     String userNow = "";
     User? statusUser = FirebaseAuth.instance.currentUser;
+
+    Future<void> _handleLogout() async {
+
+      final FirebaseAuthService _auth = FirebaseAuthService();
+        await FirebaseAuth.instance.signOut();
+        showToast(message: "User successfully logout");
+      Navigator.pushNamed(context, "/home");
+    }
+
     if(statusUser!=null){
       userNow = statusUser.email.toString();
+      
+      return Scaffold(
+            appBar: AppBar(
+              title: const Text("Smartphone Store"),
+              //leading: Icon(Icons.phone_android),
+              backgroundColor: Colors.blueGrey,
+            ),
+            drawer: Drawer(
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text(userNow),
+                      titleTextStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
+                      leading: Icon(Icons.person),
+                      onTap: (){
+                        
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Home"),
+                      leading: Icon(Icons.home),
+                      onTap: (){
+                        Navigator.pushNamed(context,"/home");
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Cart"),
+                      leading: Icon(Icons.add_shopping_cart_rounded),
+                      onTap: (){
+                        if (allCart.isInitialdata == false && userNow!=""){
+                          allCart.initialData(userNow).then((value){
+                            Navigator.pushNamed(context,"/cart");
+                          });
+                        }
+                        else{
+                          Navigator.pushNamed(context,"/cart");
+                        }
+                        print(userNow);
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Logout"),
+                      leading: Icon(Icons.logout),
+                      onTap: (){
+                        _handleLogout();
+                      },
+                    ),
+                  ],
+                ),
+                ),
+            ),
+
+            body: LayoutBuilder(builder: (BuildContext context,BoxConstraints constraints){
+              if(constraints.maxWidth<=1200){
+                return mobilePageMainScreeen();
+              }else{
+                return webPageMainScreen();
+              }
+            }
+            ),
+          );
     }
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
@@ -47,22 +120,6 @@ class MainScreen extends StatelessWidget {
                   Navigator.pushNamed(context,"/register");
                 },
               ),
-              ListTile(
-                title: Text("Cart"),
-                leading: Icon(Icons.add_shopping_cart_rounded),
-                onTap: (){
-                  if (allCart.isInitialdata == false && userNow!=""){
-                    allCart.initialData(userNow).then((value){
-                      Navigator.pushNamed(context,"/cart");
-                    });
-                  }
-                  else{
-                    Navigator.pushNamed(context,"/cart");
-                  }
-                  print(userNow);
-                },
-              ),
-
             ],
           ),
           ),

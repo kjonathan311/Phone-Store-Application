@@ -1,9 +1,7 @@
 class UserLogin{
     String? email;
-    String? username;
 
-    UserLogin(String email, String username){
+    UserLogin(String? email){
         this.email = email;
-        this.username=username;
     }
 }

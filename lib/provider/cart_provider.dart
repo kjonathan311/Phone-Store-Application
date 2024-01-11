@@ -178,6 +178,7 @@ class CartProvider extends ChangeNotifier {
     allcart.clear();
     _qty.clear();
     _isCheck.clear();
+    _totalHarga = 0;
     Uri url = Uri.parse("https://phone-store-project-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json");
     var hasilGet = await http.get(url);
 

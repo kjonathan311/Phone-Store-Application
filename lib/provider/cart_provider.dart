@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
-import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:phone_store_application/phone.dart';
@@ -26,6 +24,7 @@ class CartProvider extends ChangeNotifier {
   bool get isInitialdata => _isInitialdata;
   // int get totalHarga => _totalHarga;
   String get totalHarga => formatter.format(_totalHarga);
+  double get dtotalHarga => _totalHarga.toDouble();
   
 
   

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_store_application/FIrebaseAuthService.dart';
+import 'package:phone_store_application/User_provider.dart';
 import 'package:phone_store_application/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -38,9 +39,18 @@ class LoginScreenState extends State<LoginScreen> {
 
     final FirebaseAuthService _auth = FirebaseAuthService();
 
-      User? user = await _auth.Login(email, password);
+      User? user = await _auth.Login(email,password);
       if (user != null) {
         showToast(message: "User successfully login");
+        MultiProvider(
+          providers: [ChangeNotifierProvider<UserProvider>(create: (context)=>UserProvider(),)],
+          child: Consumer<UserProvider>(
+            builder: (context, UserProvider userProvider,widget){
+              userProvider.doLogin(email);
+              return SizedBox.shrink();
+            },
+          ), 
+          );
         allCart.initialData(email).then((value){
           Navigator.pushNamed(context, "/home");
         });
@@ -55,6 +65,7 @@ class LoginScreenState extends State<LoginScreen> {
     if(statusUser!=null){
       userNow = statusUser.email.toString();
     }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
@@ -110,7 +121,7 @@ class LoginScreenState extends State<LoginScreen> {
             padding: EdgeInsets.all(100),
             child: Column(
             children: [
-            Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+            Text("Sign In",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
             SizedBox(height: 30,),
             Text("Email"),
             SizedBox(height: 5,),

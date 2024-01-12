@@ -133,7 +133,7 @@ class _webPageMainScreenState extends State<webPageMainScreen> {
   @override
   Widget build(BuildContext context) {
     
-    PaymentStripe _paymentService = PaymentStripe();
+    // PaymentStripe _paymentService = PaymentStripe();
 
     final cartData = Provider.of<CartProvider>(context, listen:false).allcart;
     final cartQty = Provider.of<CartProvider>(context, listen:false).qty;
@@ -307,7 +307,7 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
   
   @override
   Widget build(BuildContext context) {
-    PaymentStripe _paymentService = PaymentStripe();
+    // PaymentStripe _paymentService = PaymentStripe();
     // final myCart = Provider.of<CartProvider>(context).allcart;
     final cartData = Provider.of<CartProvider>(context, listen:false).allcart;
     final cartQty = Provider.of<CartProvider>(context, listen:false).qty;
@@ -451,7 +451,7 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(primary: Colors.blue),
                           onPressed: (){
-                            _paymentService.makePayment(context, dtotalHarga);
+                            // _paymentService.makePayment(context, dtotalHarga);
                           },child:Text("Checkout", style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
                         )
                       ],

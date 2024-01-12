@@ -16,8 +16,8 @@ import 'firebase_options.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey = APIkeys.publishableKey;
-  await Stripe.instance.applySettings();
+  // Stripe.publishableKey = APIkeys.publishableKey;
+  // await Stripe.instance.applySettings();
   await Firebase.initializeApp(
          options: DefaultFirebaseOptions.currentPlatform,
   );

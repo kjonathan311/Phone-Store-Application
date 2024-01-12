@@ -1,0 +1,4 @@
+class APIkeys{
+  static const publishableKey = "pk_test_51OXPdQDlvVOgDAUCK0Wf8wMaRvcrcpkHXxQUYM4dknEqklIYPU0AiaimDc5kdIe6CRX9Ue8L0sOWSaaqRMLPBhA800b8NKjBTb";
+  static const secretKey = "sk_test_51OXPdQDlvVOgDAUCsmLyvglXidQVPD8hTBomQoxw7gHoXNUrIZtPBZTfgCmsdWctsKB2oVognPQ26Bq8YZ7Hz0uJ00u9VVFp60";
+}

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:phone_store_application/FIrebaseAuthService.dart';
 import 'package:phone_store_application/detail_phone_screen.dart';
-import 'package:phone_store_application/midtrans/snap.dart';
 import 'package:phone_store_application/phone.dart';
 import 'package:phone_store_application/provider/cart_provider.dart';
+import 'package:phone_store_application/services/payment.dart';
 import 'package:provider/provider.dart';
+
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -29,21 +29,6 @@ class CartScreen extends StatelessWidget {
     //   userEmail = user.email;
     //   userPhoneNumber = user.phoneNumber;
     // }
-
-    Future<void> _handleLogout() async {
-
-      final FirebaseAuthService _auth = FirebaseAuthService();
-        await FirebaseAuth.instance.signOut();
-        showToast(message: "User successfully logout");
-      Navigator.pushNamed(context, "/home");
-    }
-
-    String userNow = "";
-    User? statusUser = FirebaseAuth.instance.currentUser;
-    if(statusUser!=null){
-      userNow = statusUser.email.toString();
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Smartphone Store"),
@@ -55,18 +40,24 @@ class CartScreen extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
-                title: Text(userNow),
-                titleTextStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
-                leading: Icon(Icons.person),
-                onTap: (){
-                  
-                },
-              ),
-              ListTile(
                 title: Text("Home"),
                 leading: Icon(Icons.home),
                 onTap: (){
                   Navigator.pushNamed(context,"/home");
+                },
+              ),
+              ListTile(
+                title: Text("Login"),
+                leading: Icon(Icons.person),
+                onTap: (){
+                  Navigator.pushNamed(context,"/login");
+                },
+              ),
+              ListTile(
+                title: Text("Register"),
+                leading: Icon(Icons.app_registration),
+                onTap: (){
+                  Navigator.pushNamed(context,"/register");
                 },
               ),
               ListTile(
@@ -76,13 +67,7 @@ class CartScreen extends StatelessWidget {
                   Navigator.pushNamed(context,"/cart");
                 },
               ),
-              ListTile(
-                title: Text("Logout"),
-                leading: Icon(Icons.logout),
-                onTap: (){
-                  _handleLogout();
-                },
-              ),
+
             ],
           ),
           ),
@@ -131,6 +116,7 @@ class _webPageMainScreenState extends State<webPageMainScreen> {
   @override
   Widget build(BuildContext context) {
     
+    PaymentStripe _paymentService = PaymentStripe();
 
     final cartData = Provider.of<CartProvider>(context, listen:false).allcart;
     final cartQty = Provider.of<CartProvider>(context, listen:false).qty;
@@ -259,9 +245,7 @@ class _webPageMainScreenState extends State<webPageMainScreen> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.blue),
                         onPressed: (){
-                          Navigator.push(context,MaterialPageRoute(builder: (context){
-                            return SnapScreen();
-                          }));
+                          
                         },child:Text("Checkout", style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
                       )
                     ],
@@ -304,12 +288,14 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
   
   @override
   Widget build(BuildContext context) {
+    PaymentStripe _paymentService = PaymentStripe();
     // final myCart = Provider.of<CartProvider>(context).allcart;
     final cartData = Provider.of<CartProvider>(context, listen:false).allcart;
     final cartQty = Provider.of<CartProvider>(context, listen:false).qty;
     final cartCheck = Provider.of<CartProvider>(context, listen:false).isCheck;
     final checkCount = Provider.of<CartProvider>(context, listen:false).countCheck;
     final totalHarga = Provider.of<CartProvider>(context, listen:false).totalHarga;
+    final dtotalHarga = Provider.of<CartProvider>(context, listen:false).dtotalHarga;
     if(cartData.length == 0){
       return Align(
         alignment: Alignment.center,
@@ -446,9 +432,7 @@ class _mobilePageMainScreeenState extends State<mobilePageMainScreeen> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(primary: Colors.blue),
                           onPressed: (){
-                            // Navigator.push(context,MaterialPageRoute(builder: (context){
-                            //   return DetailScreen(phone:phone);
-                            // }));
+                            _paymentService.makePayment(context, dtotalHarga);
                           },child:Text("Checkout", style:const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold,color: Colors.black)),
                         )
                       ],
